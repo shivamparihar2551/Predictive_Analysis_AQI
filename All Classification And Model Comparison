@@ -1,0 +1,292 @@
+
+# ============================================================
+# 8.1 LOGISTIC REGRESSION
+#    Train-test split: 80% training, 20% testing
+# ============================================================
+
+X_train_lr, X_test_lr, y_train_lr, y_test_lr = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+scaler_lr = StandardScaler()
+X_train_lr_scaled = scaler_lr.fit_transform(X_train_lr)
+X_test_lr_scaled = scaler_lr.transform(X_test_lr)
+
+logistic_model = LogisticRegression(max_iter=1000)
+logistic_model.fit(X_train_lr_scaled, y_train_lr)
+logistic_pred = logistic_model.predict(X_test_lr_scaled)
+
+logistic_accuracy = accuracy_score(y_test_lr, logistic_pred)
+logistic_precision = precision_score(y_test_lr, logistic_pred, average="macro", zero_division=0)
+logistic_recall = recall_score(y_test_lr, logistic_pred, average="macro", zero_division=0)
+logistic_f1 = f1_score(y_test_lr, logistic_pred, average="macro", zero_division=0)
+logistic_weighted_f1 = f1_score(y_test_lr, logistic_pred, average="weighted", zero_division=0)
+
+print("\n" + "=" * 65)
+print("LOGISTIC REGRESSION")
+print("=" * 65)
+print(f"Accuracy: {logistic_accuracy:.4f} ({logistic_accuracy * 100:.2f}%)")
+print("Confusion Matrix:")
+print(confusion_matrix(y_test_lr, logistic_pred))
+print("Classification Report:")
+print(classification_report(
+    y_test_lr, logistic_pred, labels=np.arange(len(class_names)),
+    target_names=class_names, zero_division=0
+))
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(
+    confusion_matrix(y_test_lr, logistic_pred, labels=np.arange(len(class_names))),
+    annot=True, fmt="d", cmap="Blues",
+    xticklabels=class_names, yticklabels=class_names
+)
+plt.title("Confusion Matrix - Logistic Regression")
+plt.xlabel("Predicted Pollutant Type")
+plt.ylabel("Actual Pollutant Type")
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+
+# ============================================================
+# 8.2 K-NEAREST NEIGHBORS (KNN)
+#    Train-test split: 80% training, 20% testing
+# ============================================================
+
+X_train_knn, X_test_knn, y_train_knn, y_test_knn = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+scaler_knn = StandardScaler()
+X_train_knn_scaled = scaler_knn.fit_transform(X_train_knn)
+X_test_knn_scaled = scaler_knn.transform(X_test_knn)
+
+knn_model = KNeighborsClassifier(n_neighbors=7, metric="euclidean")
+knn_model.fit(X_train_knn_scaled, y_train_knn)
+knn_pred = knn_model.predict(X_test_knn_scaled)
+
+knn_accuracy = accuracy_score(y_test_knn, knn_pred)
+knn_precision = precision_score(y_test_knn, knn_pred, average="macro", zero_division=0)
+knn_recall = recall_score(y_test_knn, knn_pred, average="macro", zero_division=0)
+knn_f1 = f1_score(y_test_knn, knn_pred, average="macro", zero_division=0)
+knn_weighted_f1 = f1_score(y_test_knn, knn_pred, average="weighted", zero_division=0)
+
+print("\n" + "=" * 65)
+print("K-NEAREST NEIGHBORS (KNN)")
+print("=" * 65)
+print(f"Accuracy: {knn_accuracy:.4f} ({knn_accuracy * 100:.2f}%)")
+print("Confusion Matrix:")
+print(confusion_matrix(y_test_knn, knn_pred))
+print("Classification Report:")
+print(classification_report(
+    y_test_knn, knn_pred, labels=np.arange(len(class_names)),
+    target_names=class_names, zero_division=0
+))
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(
+    confusion_matrix(y_test_knn, knn_pred, labels=np.arange(len(class_names))),
+    annot=True, fmt="d", cmap="Blues",
+    xticklabels=class_names, yticklabels=class_names
+)
+plt.title("Confusion Matrix - KNN")
+plt.xlabel("Predicted Pollutant Type")
+plt.ylabel("Actual Pollutant Type")
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+
+# ============================================================
+# 8.3 DECISION TREE CLASSIFICATION
+#    Train-test split: 75% training, 25% testing
+# ============================================================
+X_train_dt, X_test_dt, y_train_dt, y_test_dt = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+# Scaling is retained here to match the reference workflow.
+scaler_dt = StandardScaler()
+X_train_dt_scaled = scaler_dt.fit_transform(X_train_dt)
+X_test_dt_scaled = scaler_dt.transform(X_test_dt)
+
+decision_tree_model = DecisionTreeClassifier(random_state=42)
+decision_tree_model.fit(X_train_dt_scaled, y_train_dt)
+decision_tree_pred = decision_tree_model.predict(X_test_dt_scaled)
+
+dt_accuracy = accuracy_score(y_test_dt, decision_tree_pred)
+dt_precision = precision_score(y_test_dt, decision_tree_pred, average="macro", zero_division=0)
+dt_recall = recall_score(y_test_dt, decision_tree_pred, average="macro", zero_division=0)
+dt_f1 = f1_score(y_test_dt, decision_tree_pred, average="macro", zero_division=0)
+dt_weighted_f1 = f1_score(y_test_dt, decision_tree_pred, average="weighted", zero_division=0)
+
+print("\n" + "=" * 65)
+print("DECISION TREE CLASSIFICATION")
+print("=" * 65)
+print(f"Accuracy: {dt_accuracy:.4f} ({dt_accuracy * 100:.2f}%)")
+print("Confusion Matrix:")
+print(confusion_matrix(y_test_dt, decision_tree_pred))
+print("Classification Report:")
+print(classification_report(
+    y_test_dt, decision_tree_pred, labels=np.arange(len(class_names)),
+    target_names=class_names, zero_division=0
+))
+plt.figure(figsize=(8, 6))
+sns.heatmap(
+    confusion_matrix(y_test_dt, decision_tree_pred, labels=np.arange(len(class_names))),
+    annot=True, fmt="d", cmap="Blues",
+    xticklabels=class_names, yticklabels=class_names
+)
+plt.title("Confusion Matrix - Decision Tree")
+plt.xlabel("Predicted Pollutant Type")
+plt.ylabel("Actual Pollutant Type")
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+from sklearn.tree import plot_tree
+
+plt.figure(figsize=(22, 10))
+plot_tree(
+    decision_tree_model,
+    feature_names=classification_features,
+    class_names=[str(name) for name in class_names],
+    filled=True,
+    rounded=True,
+    max_depth=5,
+    fontsize=9
+)
+plt.title("Decision Tree - Pollutant Type Classification")
+plt.tight_layout()
+plt.show()
+
+
+# ============================================================
+# 8.4 RANDOM FOREST CLASSIFICATION
+#    Train-test split: 75% training, 25% testing
+# ============================================================
+
+X_train_rf, X_test_rf, y_train_rf, y_test_rf = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+
+# Scaling is retained here to match the reference workflow.
+scaler_rf = StandardScaler()
+X_train_rf_scaled = scaler_rf.fit_transform(X_train_rf)
+X_test_rf_scaled = scaler_rf.transform(X_test_rf)
+
+random_forest_model = RandomForestClassifier(n_estimators=100, random_state=42)
+random_forest_model.fit(X_train_rf_scaled, y_train_rf)
+random_forest_pred = random_forest_model.predict(X_test_rf_scaled)
+
+rf_accuracy = accuracy_score(y_test_rf, random_forest_pred)
+rf_precision = precision_score(y_test_rf, random_forest_pred, average="macro", zero_division=0)
+rf_recall = recall_score(y_test_rf, random_forest_pred, average="macro", zero_division=0)
+rf_f1 = f1_score(y_test_rf, random_forest_pred, average="macro", zero_division=0)
+rf_weighted_f1 = f1_score(y_test_rf, random_forest_pred, average="weighted", zero_division=0)
+
+print("\n" + "=" * 65)
+print("RANDOM FOREST CLASSIFICATION")
+print("=" * 65)
+print(f"Accuracy: {rf_accuracy:.4f} ({rf_accuracy * 100:.2f}%)")
+print("Confusion Matrix:")
+print(confusion_matrix(y_test_rf, random_forest_pred))
+print("Classification Report:")
+print(classification_report(
+    y_test_rf, random_forest_pred, labels=np.arange(len(class_names)),
+    target_names=class_names, zero_division=0
+))
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(
+    confusion_matrix(y_test_rf, random_forest_pred, labels=np.arange(len(class_names))),
+    annot=True, fmt="d", cmap="Blues",
+    xticklabels=class_names, yticklabels=class_names
+)
+plt.title("Confusion Matrix - Random Forest")
+plt.xlabel("Predicted Pollutant Type")
+plt.ylabel("Actual Pollutant Type")
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.tight_layout()
+plt.show()
+
+# Visualize the first decision tree inside the random forest.
+first_tree = random_forest_model.estimators_[0]
+plt.figure(figsize=(22, 10))
+plot_tree(
+    first_tree,
+    feature_names=classification_features,
+    class_names=[str(name) for name in class_names],
+    filled=True,
+    rounded=True,
+    max_depth=5,
+    fontsize=9
+)
+plt.title("Random Forest - First Decision Tree")
+plt.tight_layout()
+plt.show()
+
+# Random Forest feature importance visualization.
+feature_importance = pd.Series(
+    random_forest_model.feature_importances_,
+    index=classification_features
+).sort_values(ascending=True)
+
+plt.figure(figsize=(8, 5))
+feature_importance.plot(kind="barh")
+plt.title("Random Forest Feature Importance")
+plt.xlabel("Importance")
+plt.ylabel("Feature")
+plt.tight_layout()
+plt.show()
+
+
+# ============================================================
+# 9. MODEL COMPARISON
+# ============================================================
+
+results_df = pd.DataFrame([
+    {"Model": "Logistic Regression", "Accuracy": logistic_accuracy,
+     "Macro Precision": logistic_precision, "Macro Recall": logistic_recall,
+     "Macro F1": logistic_f1, "Weighted F1": logistic_weighted_f1},
+    {"Model": "K-Nearest Neighbors", "Accuracy": knn_accuracy,
+     "Macro Precision": knn_precision, "Macro Recall": knn_recall,
+     "Macro F1": knn_f1, "Weighted F1": knn_weighted_f1},
+    {"Model": "Decision Tree", "Accuracy": dt_accuracy,
+     "Macro Precision": dt_precision, "Macro Recall": dt_recall,
+     "Macro F1": dt_f1, "Weighted F1": dt_weighted_f1},
+    {"Model": "Random Forest", "Accuracy": rf_accuracy,
+     "Macro Precision": rf_precision, "Macro Recall": rf_recall,
+     "Macro F1": rf_f1, "Weighted F1": rf_weighted_f1}
+])
+
+results_df = results_df.sort_values(by="Accuracy", ascending=False).reset_index(drop=True)
+print("\n" + "=" * 65)
+print("CLASSIFICATION MODEL COMPARISON")
+print("=" * 65)
+print(results_df.to_string(index=False, formatters={
+    "Accuracy": "{:.4f}".format,
+    "Macro Precision": "{:.4f}".format,
+    "Macro Recall": "{:.4f}".format,
+    "Macro F1": "{:.4f}".format,
+    "Weighted F1": "{:.4f}".format
+}))
+
+best_model_name = results_df.loc[0, "Model"]
+print("\nBest model based on Accuracy:", best_model_name)
+print("Best Accuracy:", f"{results_df.loc[0, 'Accuracy'] * 100:.2f}%")
+
+plot_results = results_df.set_index("Model")[
+    ["Accuracy", "Macro Precision", "Macro Recall", "Macro F1", "Weighted F1"]
+]
+plot_results.plot(kind="bar", figsize=(12, 6))
+plt.title("Comparison of Classification Models")
+plt.ylabel("Score")
+plt.ylim(0, 1)
+plt.xticks(rotation=20, ha="right")
+plt.legend(loc="best")
+plt.tight_layout()
+plt.show()
